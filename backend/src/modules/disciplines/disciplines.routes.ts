@@ -27,6 +27,7 @@ import {
   updateGroupSchema,
   groupIdSchema,
   assignMemberSchema,
+  memberIdParamSchema,
   setupDisciplineSchema,
 } from "./disciplines.schema";
 
@@ -53,6 +54,6 @@ router.get("/groups/:id", authenticateToken, validate(groupIdSchema, "params"), 
 router.put("/groups/:id", authenticateToken, requireAdmin, validate(groupIdSchema, "params"), validate(updateGroupSchema), updateGroupCtrl);
 router.delete("/groups/:id", authenticateToken, requireAdmin, validate(groupIdSchema, "params"), deleteGroupCtrl);
 router.post("/groups/:id/members", authenticateToken, requireAdmin, validate(groupIdSchema, "params"), validate(assignMemberSchema), assignMember);
-router.delete("/groups/:id/members/:memberId", authenticateToken, requireAdmin, validate(groupIdSchema, "params"), removeMember);
+router.delete("/groups/:id/members/:memberId", authenticateToken, requireAdmin, validate(groupIdSchema, "params"), validate(memberIdParamSchema, "params"), removeMember);
 
 export default router;

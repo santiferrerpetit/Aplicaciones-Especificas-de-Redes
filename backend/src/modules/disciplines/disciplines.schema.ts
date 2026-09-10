@@ -30,6 +30,10 @@ export const assignMemberSchema = z.object({
   memberId: z.coerce.number().int().positive(),
 });
 
+export const memberIdParamSchema = z.object({
+  memberId: z.coerce.number().int().positive(),
+});
+
 export const setupDisciplineSchema = z.object({
   name: z.string().min(1, "El nombre es requerido").max(200),
   category: categoryEnum,

@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, getUserById } from "./auth.service";
+import { registerUser, loginUser, getUserById, getUsers } from "./auth.service";
 import { asyncHandler } from "../../middleware/asyncHandler";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -31,3 +31,9 @@ export const me = asyncHandler(async (req: Request, res: Response, next: NextFun
 export const logout = asyncHandler(async (_req: Request, res: Response) => {
   res.json({ message: "Logout exitoso" });
 });
+
+export const listUsers = asyncHandler(async (_req: Request, res: Response) => {
+  const users = await getUsers();
+  res.json(users);
+});
+

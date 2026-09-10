@@ -6,11 +6,11 @@ import {
   save,
   stats,
 } from "./attendance.controller";
-import { recordAttendanceSchema } from "./attendance.schema";
+import { getAttendanceSchema, recordAttendanceSchema } from "./attendance.schema";
 
 const router = Router();
 
-router.get("/", authenticateToken, listAttendance);
+router.get("/", authenticateToken, validate(getAttendanceSchema, "query"), listAttendance);
 router.post("/", authenticateToken, validate(recordAttendanceSchema), save);
 router.get("/stats", authenticateToken, stats);
 

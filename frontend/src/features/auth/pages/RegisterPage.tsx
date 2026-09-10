@@ -106,11 +106,19 @@ export default function RegisterPage() {
                     type="password"
                     placeholder="••••••••"
                     className="pl-8"
-                    {...register("password", { required: "La contraseña es requerida" })}
+                    {...register("password", {
+                      required: "La contraseña es requerida",
+                      minLength: { value: 8, message: "Mínimo 8 caracteres" },
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                        message: "Debe tener mayúscula, minúscula y número",
+                      },
+                    })}
                     aria-invalid={errors.password ? "true" : "false"}
                   />
                 </div>
                 {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+                <p className="text-xs text-muted-foreground">Mínimo 8 caracteres, con mayúscula, minúscula y número</p>
               </div>
 
               <div className="flex flex-col gap-2">

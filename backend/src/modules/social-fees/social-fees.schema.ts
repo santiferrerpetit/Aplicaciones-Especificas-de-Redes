@@ -15,6 +15,10 @@ export const socialFeeIdSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const memberIdSchema = z.object({
+  memberId: z.coerce.number().int().positive(),
+});
+
 export const toggleSocialFeePaidSchema = z.object({
   memberSocialFeeId: z.coerce.number().int().positive(),
   paid: z.coerce.boolean(),

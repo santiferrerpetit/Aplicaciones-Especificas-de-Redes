@@ -18,6 +18,8 @@ import {
   createFeeSchema,
   updateFeeSchema,
   feeIdSchema,
+  memberIdSchema,
+  feeIdParamSchema,
   assignFeeSchema,
   toggleFeePaidSchema,
 } from "./fees.schema";
@@ -33,8 +35,8 @@ router.get("/all-assignments", authenticateToken, requireAdmin, listAllMemberFee
 // Asignación de aranceles a socios
 router.post("/assign", authenticateToken, requireAdmin, validate(assignFeeSchema), assignFee);
 router.post("/toggle-paid", authenticateToken, requireAdmin, validate(toggleFeePaidSchema), togglePaid);
-router.get("/member/:memberId", authenticateToken, requireAdmin, listMemberFees);
-router.delete("/member/:memberId/fee/:feeId", authenticateToken, requireAdmin, unassignFee);
+router.get("/member/:memberId", authenticateToken, requireAdmin, validate(memberIdSchema, "params"), listMemberFees);
+router.delete("/member/:memberId/fee/:feeId", authenticateToken, requireAdmin, validate(memberIdSchema, "params"), validate(feeIdParamSchema, "params"), unassignFee);
 
 // CRUD de aranceles (rutas genéricas :id van AL FINAL)
 router.get("/:id", authenticateToken, requireAdmin, validate(feeIdSchema, "params"), getFee);

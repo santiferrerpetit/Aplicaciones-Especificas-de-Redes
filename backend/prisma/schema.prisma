@@ -28,6 +28,8 @@ model User {
   groupClasses    GroupClass[]
   inventoryLoans  InventoryLoan[]
   maintenanceLogs MaintenanceLog[]
+  reservations    Reservation[]    @relation("ReservationRequester")
+  uploadedFiles   UploadedFile[]
 }
 
 model Salary {
@@ -47,6 +49,7 @@ model Member {
   birthDate DateTime
   email     String?
   phone     String?
+  photo     String?
   isActive  Boolean  @default(true)
 
   memberGroups     MemberGroup[]
@@ -77,12 +80,12 @@ model GroupClass {
 }
 
 model MemberGroup {
-  id               Int        @id @default(autoincrement())
-  memberId         Int
-  member           Member     @relation(fields: [memberId], references: [id])
-  groupClassId     Int
-  groupClass       GroupClass @relation(fields: [groupClassId], references: [id])
-  sportsFeePaid    Boolean    @default(false)
+  id            Int        @id @default(autoincrement())
+  memberId      Int
+  member        Member     @relation(fields: [memberId], references: [id])
+  groupClassId  Int
+  groupClass    GroupClass @relation(fields: [groupClassId], references: [id])
+  sportsFeePaid Boolean    @default(false)
 
   @@unique([memberId, groupClassId])
 }
@@ -98,12 +101,20 @@ model Attendance {
 }
 
 model Inventory {
-  id                Int    @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   name              String
+  category          String?
+  location          String?
   totalQuantity     Int
   availableQuantity Int
+  minimumQuantity   Int      @default(0)
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
 
   loans InventoryLoan[]
+
+  @@index([active])
 }
 
 model InventoryLoan {
@@ -112,35 +123,83 @@ model InventoryLoan {
   item         Inventory @relation(fields: [itemId], references: [id])
   userId       Int
   user         User      @relation(fields: [userId], references: [id])
+  quantity     Int       @default(1)
   checkoutDate DateTime
+  dueDate      DateTime?
   returnDate   DateTime?
   returned     Boolean   @default(false)
+  notes        String?
+
+  @@index([itemId, returned])
+  @@index([userId, returned])
 }
 
 model Facility {
-  id   Int    @id @default(autoincrement())
-  name String
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  active      Boolean  @default(true)
+  reservable  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   maintenanceLogs MaintenanceLog[]
+  reservations    Reservation[]
 }
 
 model MaintenanceLog {
-  id             Int       @id @default(autoincrement())
-  facilityId     Int
-  facility       Facility  @relation(fields: [facilityId], references: [id])
-  userId         Int
-  user           User      @relation(fields: [userId], references: [id])
-  date           DateTime
+  id              Int       @id @default(autoincrement())
+  facilityId      Int
+  facility        Facility  @relation(fields: [facilityId], references: [id])
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id])
+  date            DateTime
   taskDescription String
-  suppliesNeeded String?
-  status         String
+  suppliesNeeded  String?
+  status          String    @default("PENDING")
+  priority        String    @default("MEDIUM")
+  resolvedAt      DateTime?
+  files           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
+}
+
+model Reservation {
+  id         Int      @id @default(autoincrement())
+  facilityId Int
+  facility   Facility @relation(fields: [facilityId], references: [id])
+  userId     Int
+  user       User     @relation("ReservationRequester", fields: [userId], references: [id])
+  startAt    DateTime
+  endAt      DateTime
+  status     String   @default("CONFIRMED")
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@index([facilityId, startAt, endAt])
+  @@index([userId, status])
+}
+
+model UploadedFile {
+  id           Int      @id @default(autoincrement())
+  originalName String
+  storedName   String
+  mimeType     String
+  size         Int
+  module       String
+  refId        Int?
+  url          String
+  uploadedById Int?
+  user         User?    @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime @default(now())
 }
 
 model SportsFee {
   id           Int        @id @default(autoincrement())
   name         String
   amount       Decimal
-  category     String     // Infantil | Juvenil | Adulto | Senior
+  category     String // Infantil | Juvenil | Adulto | Senior
   description  String?
   active       Boolean    @default(true)
   disciplineId Int
@@ -172,20 +231,22 @@ model MemberSocialFee {
   amount      Decimal
   paid        Boolean   @default(false)
   paidAt      DateTime?
+  receipt     String?
   createdAt   DateTime  @default(now())
 
   @@unique([memberId, periodMonth, periodYear])
 }
 
 model MemberFee {
-  id          Int       @id @default(autoincrement())
-  memberId    Int
-  member      Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  feeId       Int
-  fee         SportsFee @relation(fields: [feeId], references: [id], onDelete: Cascade)
-  paid        Boolean   @default(false)
-  paidAt      DateTime?
-  createdAt   DateTime  @default(now())
+  id        Int       @id @default(autoincrement())
+  memberId  Int
+  member    Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  feeId     Int
+  fee       SportsFee @relation(fields: [feeId], references: [id], onDelete: Cascade)
+  paid      Boolean   @default(false)
+  paidAt    DateTime?
+  receipt   String?
+  createdAt DateTime  @default(now())
 
   @@unique([memberId, feeId])
 }

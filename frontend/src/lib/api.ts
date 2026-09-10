@@ -30,27 +30,19 @@ interface ApiError extends Error {
 /**
  * Función genérica para realizar peticiones HTTP al backend.
  * Adjunta automáticamente el token JWT y maneja errores 401 (sesión expirada).
+ * Si el body es FormData, omite Content-Type (fetch lo setea con boundary).
  *
  * @template T - Tipo de dato esperado en la respuesta
  * @param {string} path - Ruta relativa a API_BASE (ej: "/api/auth/me")
  * @param {ApiOptions} [options={}] - Opciones de fetch (method, body, headers, skipAuth)
  * @returns {Promise<T>} Datos parseados de la respuesta
  * @throws {ApiError} Error con statusCode y code cuando la petición falla
- *
- * @example
- * const data = await apiFetch<User[]>("/api/members");
- *
- * @example
- * const result = await apiFetch("/api/auth/login", {
- *   method: "POST",
- *   body: JSON.stringify({ username, password }),
- *   skipAuth: true,
- * });
  */
 export async function apiFetch<T = any>(path: string, options: ApiOptions = {}): Promise<T> {
   const url = `${API_BASE}${path}`;
+  const isFormData = options.body instanceof FormData;
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...((options.headers as Record<string, string>) || {}),
   };
 
@@ -64,7 +56,8 @@ export async function apiFetch<T = any>(path: string, options: ApiOptions = {}):
     headers,
   });
 
-  const data = await response.json().catch(() => ({}));
+  const isJson = response.headers.get("content-type")?.includes("application/json");
+  const data = isJson ? await response.json().catch(() => ({})) : {};
 
   if (response.status === 401) {
     localStorage.removeItem("token");

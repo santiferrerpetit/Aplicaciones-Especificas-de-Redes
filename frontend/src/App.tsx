@@ -17,6 +17,11 @@ const DisciplinesPage = lazy(() => import("@/features/disciplines/pages/Discipli
 const DisciplineDetailPage = lazy(() => import("@/features/disciplines/pages/DisciplineDetailPage"));
 const GroupDetailPage = lazy(() => import("@/features/disciplines/pages/GroupDetailPage"));
 const AttendancePage = lazy(() => import("@/features/attendance/pages/AttendancePage"));
+const SalaryPage = lazy(() => import("@/features/salary/pages/SalaryPage"));
+const InventoryPage = lazy(() => import("@/features/inventory/pages/InventoryPage"));
+const ReservationsPage = lazy(() => import("@/features/reservations/pages/ReservationsPage"));
+const MaintenancePage = lazy(() => import("@/features/maintenance/pages/MaintenancePage"));
+const AccessDeniedPage = lazy(() => import("@/pages/AccessDeniedPage"));
 
 function LoadingFallback() {
   return (
@@ -43,6 +48,7 @@ function AnimatedRoutes() {
           <Route path="/" element={<HomePage />} />
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/register" element={<RegisterPage />} />
+          <Route path="/forbidden" element={<ProtectedRoute><AccessDeniedPage /></ProtectedRoute>} />
           <Route
             path="/dashboard"
             element={
@@ -99,6 +105,17 @@ function AnimatedRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/salaries"
+            element={
+              <ProtectedRoute allowedRoles={["Administrator"]}>
+                <SalaryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+          <Route path="/reservations" element={<ProtectedRoute><ReservationsPage /></ProtectedRoute>} />
+          <Route path="/maintenance" element={<ProtectedRoute><MaintenancePage /></ProtectedRoute>} />
         </Routes>
       </motion.div>
     </AnimatePresence>

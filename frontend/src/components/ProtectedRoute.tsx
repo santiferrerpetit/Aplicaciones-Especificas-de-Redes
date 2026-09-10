@@ -2,7 +2,12 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+type ProtectedRouteProps = {
+  children: React.ReactNode;
+  allowedRoles?: string[];
+};
+
+export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -16,6 +21,10 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   if (!user) {
     return <Navigate to="/auth/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role.name)) {
+    return <Navigate to="/forbidden" replace />;
   }
 
   return <>{children}</>;

@@ -94,3 +94,13 @@ export async function meApi(): Promise<MeResponse> {
 export async function logoutApi(): Promise<{ message: string }> {
   return apiFetch("/api/auth/logout", { method: "POST" });
 }
+
+/**
+ * Obtiene la lista completa de usuarios con sus roles.
+ *
+ * @returns {Promise<User[]>} Lista de usuarios
+ */
+export async function getUsersApi(): Promise<User[]> {
+  return apiFetch("/api/auth/users");
+}
+

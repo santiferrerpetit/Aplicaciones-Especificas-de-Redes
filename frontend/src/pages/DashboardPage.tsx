@@ -10,6 +10,8 @@ import {
   Package,
   Wrench,
   CheckSquare,
+  DollarSign,
+  CalendarDays,
 } from "lucide-react";
 
 const modules = [
@@ -45,15 +47,29 @@ const modules = [
     title: "Inventario",
     description: "Control de stock y préstamos de materiales deportivos.",
     icon: Package,
-    to: "#",
-    available: false,
+    to: "/inventory",
+    available: true,
+  },
+  {
+    title: "Reservas",
+    description: "Calendario de canchas y espacios comunes para usuarios internos.",
+    icon: CalendarDays,
+    to: "/reservations",
+    available: true,
   },
   {
     title: "Mantenimiento",
     description: "Bitácora de reparaciones y estado de instalaciones.",
     icon: Wrench,
-    to: "#",
-    available: false,
+    to: "/maintenance",
+    available: true,
+  },
+  {
+    title: "Salarios",
+    description: "Registro de pagos de salarios con comprobantes.",
+    icon: DollarSign,
+    to: "/salaries",
+    available: true,
   },
 ];
 

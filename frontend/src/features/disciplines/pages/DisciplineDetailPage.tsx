@@ -60,6 +60,7 @@ import type {
 } from "@/features/disciplines/api/disciplinesApi";
 
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 const CATEGORIES = ["Menor", "Infantil", "Juvenil", "Adulto", "Senior"];
 
@@ -212,13 +213,13 @@ export default function DisciplineDetailPage() {
       const group = groups.find((g) => String(g.id) === selectedGroupId);
       if (!group) return;
       // Llamar al endpoint de groups para inscribir
-      const res = await fetch(`/api/groups/${group.id}/members`, {
+      const data = await apiFetch<{ autoAssignedFee?: { name: string; amount: number } }>(
+        `/api/disciplines/groups/${group.id}/members`,
+        {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ memberId: Number(selectedMemberId) }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Error al inscribir");
+        },
+      );
 
       if (data.autoAssignedFee) {
         toast.success(

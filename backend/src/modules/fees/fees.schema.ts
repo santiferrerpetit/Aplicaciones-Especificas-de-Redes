@@ -17,6 +17,14 @@ export const feeIdSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const memberIdSchema = z.object({
+  memberId: z.coerce.number().int().positive(),
+});
+
+export const feeIdParamSchema = z.object({
+  feeId: z.coerce.number().int().positive(),
+});
+
 export const assignFeeSchema = z.object({
   memberId: z.coerce.number().int().positive(),
   feeId: z.coerce.number().int().positive(),
