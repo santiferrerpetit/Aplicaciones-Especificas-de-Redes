@@ -11,6 +11,9 @@ import attendanceRoutes from "./modules/attendance/attendance.routes";
 import uploadRoutes from "./modules/uploads/uploads.routes";
 import salaryRoutes from "./modules/salary/salary.routes";
 import usersRoutes from "./modules/users/users.routes";
+import inventoryRoutes from "./modules/inventory/inventory.routes";
+import reservationsRoutes from "./modules/reservations/reservations.routes";
+import maintenanceRoutes from "./modules/maintenance/maintenance.routes";
 import { errorHandler } from "./middleware/errorHandler";
 import { generalLimiter } from "./middleware/rateLimiter";
 
@@ -38,6 +41,9 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/salaries", salaryRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/inventory", inventoryRoutes);
+app.use("/api/reservations", reservationsRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
@@ -53,6 +59,9 @@ app.use("/attendance", attendanceRoutes);
 app.use("/uploads", uploadRoutes);
 app.use("/salaries", salaryRoutes);
 app.use("/users", usersRoutes);
+app.use("/inventory", inventoryRoutes);
+app.use("/reservations", reservationsRoutes);
+app.use("/maintenance", maintenanceRoutes);
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });

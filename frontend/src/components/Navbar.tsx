@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, LogOut, ChevronDown } from "lucide-react";
+import { Building2, LogOut, ChevronDown, CalendarDays, Package, Wrench } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -76,6 +76,23 @@ export default function Navbar() {
                     Disciplinas
                   </Link>
                 </li>
+                <li>
+                  <Link to="/inventory" className={`${navLinkBase} ${isActive("/inventory") ? navLinkActive : navLinkInactive}`}>
+                    <Package className="inline size-3.5 mr-1" />Inventario
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/reservations" className={`${navLinkBase} ${isActive("/reservations") ? navLinkActive : navLinkInactive}`}>
+                    <CalendarDays className="inline size-3.5 mr-1" />Reservas
+                  </Link>
+                </li>
+                {(user.role?.name === "Administrator" || user.role?.name === "Maintenance") && (
+                  <li>
+                    <Link to="/maintenance" className={`${navLinkBase} ${isActive("/maintenance") ? navLinkActive : navLinkInactive}`}>
+                      <Wrench className="inline size-3.5 mr-1" />Mantenimiento
+                    </Link>
+                  </li>
+                )}
                 {(user.role?.name === "Administrator" || user.role?.name === "Professor") && (
                   <li>
                     <Link to="/attendance" className={`${navLinkBase} ${isActive("/attendance") ? navLinkActive : navLinkInactive}`}>

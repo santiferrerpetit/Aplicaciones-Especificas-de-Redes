@@ -27,18 +27,24 @@ export async function saveFileRecords(
   );
 }
 
-export async function listFiles(module?: string) {
-  const where = module ? { module } : {};
+export async function listFiles(module?: string, refId?: number) {
+  const where = {
+    ...(module ? { module } : {}),
+    ...(refId ? { refId } : {}),
+  };
   return prisma.uploadedFile.findMany({
     where,
     orderBy: { createdAt: "desc" },
   });
 }
 
-export async function deleteFile(id: number) {
+export async function deleteFile(id: number, userId: number, roleName: string) {
   const file = await prisma.uploadedFile.findUnique({ where: { id } });
   if (!file) {
     throw new AppError("Archivo no encontrado", "FILE_NOT_FOUND", 404);
+  }
+  if (roleName !== "Administrator" && file.uploadedById !== userId) {
+    throw new AppError("No puedes eliminar un archivo de otro usuario", "FORBIDDEN", 403);
   }
 
   const filePath = path.join(UPLOAD_DIR, file.module, file.storedName);

@@ -122,37 +122,37 @@ export async function createGroup(disciplineId: number, data: CreateGroupInput):
 }
 
 export async function getGroup(id: number): Promise<GroupDetail> {
-  return apiFetch<GroupDetail>(`/api/groups/${id}`);
+  return apiFetch<GroupDetail>(`/api/disciplines/groups/${id}`);
 }
 
 export async function updateGroup(id: number, data: UpdateGroupInput): Promise<Group> {
-  return apiFetch<Group>(`/api/groups/${id}`, {
+  return apiFetch<Group>(`/api/disciplines/groups/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
 }
 
 export async function deleteGroup(id: number): Promise<void> {
-  return apiFetch(`/api/groups/${id}`, {
+  return apiFetch(`/api/disciplines/groups/${id}`, {
     method: "DELETE",
   });
 }
 
 export async function assignMemberToGroup(groupId: number, data: AssignMemberInput): Promise<any> {
-  return apiFetch(`/api/groups/${groupId}/members`, {
+  return apiFetch(`/api/disciplines/groups/${groupId}/members`, {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
 export async function removeMemberFromGroup(groupId: number, memberId: number): Promise<void> {
-  return apiFetch(`/api/groups/${groupId}/members/${memberId}`, {
+  return apiFetch(`/api/disciplines/groups/${groupId}/members/${memberId}`, {
     method: "DELETE",
   });
 }
 
 export async function getTeacherGroups(): Promise<Group[]> {
-  return apiFetch<Group[]>("/api/groups/teacher/me");
+  return apiFetch<Group[]>("/api/disciplines/groups/teacher/me");
 }
 
 export type Teacher = {

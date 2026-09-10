@@ -11,6 +11,11 @@ export const uploadParamsSchema = z.object({
 
 export const listQuerySchema = z.object({
   module: z.string().max(50).regex(/^[a-z-]+$/).optional(),
+  refId: z.coerce.number().int().positive().optional(),
+});
+
+export const uploadBodySchema = z.object({
+  refId: z.coerce.number().int().positive().optional(),
 });
 
 export const deleteFileSchema = z.object({

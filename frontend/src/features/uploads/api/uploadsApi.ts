@@ -13,9 +13,10 @@ export type UploadedFile = {
   createdAt: string;
 };
 
-export async function uploadFiles(files: File[], module: string = "general"): Promise<UploadedFile[]> {
+export async function uploadFiles(files: File[], module: string = "general", refId?: number): Promise<UploadedFile[]> {
   const formData = new FormData();
   files.forEach((f) => formData.append("files", f));
+  if (refId) formData.append("refId", String(refId));
   return apiFetch<UploadedFile[]>(`/api/uploads/${module}`, {
     method: "POST",
     body: formData,

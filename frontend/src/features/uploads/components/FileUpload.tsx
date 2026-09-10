@@ -16,6 +16,7 @@ interface FileUploadProps {
   maxFiles?: number;
   maxSize?: number;
   disabled?: boolean;
+  refId?: number;
 }
 
 export default function FileUpload({
@@ -25,6 +26,7 @@ export default function FileUpload({
   maxFiles = MAX_FILES,
   maxSize = MAX_SIZE,
   disabled = false,
+  refId,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -71,7 +73,7 @@ export default function FileUpload({
     setUploading(true);
     setError(null);
     try {
-      const result = await uploadFiles(selectedFiles, module);
+      const result = await uploadFiles(selectedFiles, module, refId);
       setSelectedFiles([]);
       onUploadComplete?.(result);
     } catch (err: any) {
